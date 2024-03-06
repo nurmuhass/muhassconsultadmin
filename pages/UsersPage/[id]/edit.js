@@ -102,12 +102,12 @@ const EditUser = () => {
                 <li>
                   <a class="font-medium" href="">Dashboard /</a>
                 </li>
-                <li class="font-medium text-primary">Settings</li>
+                <li class="font-medium text-primary">Edit User</li>
               </ol>
             </nav>
           </div>
   
-          <div class="grid grid-cols-2 gap-8">
+         
           <div class="col-span-2 sm:col-span-1">
   <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
     <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
@@ -280,7 +280,7 @@ const EditUser = () => {
                 </div>
               </div>
             </div>
-          </div>
+      
         </div>
       </div>
     </main>
