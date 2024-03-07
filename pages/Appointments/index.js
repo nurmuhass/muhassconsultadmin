@@ -44,7 +44,7 @@ export default function index({Appoinments}) {
       <div>
         <input
           type="text"
-          placeholder="Search by Email"
+          placeholder="Search by Booking REFERENCE NUM "
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border p-2 mb-3"
@@ -55,7 +55,7 @@ export default function index({Appoinments}) {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <CustomTableCell>Booking reference Num ID</CustomTableCell>
+              <CustomTableCell>Booking reference Num</CustomTableCell>
               <CustomTableCell>Doctors Email</CustomTableCell>
               <CustomTableCell> Patients Email</CustomTableCell>
               <CustomTableCell>Consultation Date</CustomTableCell>
