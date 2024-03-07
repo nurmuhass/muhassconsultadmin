@@ -2,6 +2,9 @@ import { forwardRef } from "react";
 import Link from "next/link";
 import { HomeIcon, CreditCardIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
+import MedicationIcon from '@mui/icons-material/Medication';
+import MasksIcon from '@mui/icons-material/Masks';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const SideBar = forwardRef(({ showNav }, ref) => {
   const router = useRouter();
@@ -32,19 +35,19 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             </div>
           </div>
         </Link>
-        <Link href="/create">
+        <Link href="/Appointments">
           <div
             className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
-              router.pathname == "/create"
+              router.pathname == "/Appoinments"
                 ? "bg-orange-100 text-orange-500"
                 : "text-gray-400 hover:bg-orange-100 hover:text-orange-500"
             }`}
           >
             <div className="mr-2">
-              <UserIcon className="h-5 w-5" />
+              <CalendarMonthIcon className="h-5 w-5" />
             </div>
             <div>
-              <p>Create Item</p>
+              <p>Appoinments</p>
             </div>
           </div>
         </Link>
@@ -57,7 +60,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             }`}
           >
             <div className="mr-2">
-              <CreditCardIcon className="h-5 w-5" />
+              <MedicationIcon className="h-5 w-5" />
             </div>
             <div>
               <p>SingUpDoctors</p>
@@ -74,10 +77,27 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             }`}
           >
             <div className="mr-2">
-              <CreditCardIcon className="h-5 w-5" />
+            <UserIcon className="h-5 w-5" />
             </div>
             <div>
               <p>UsersPage</p>
+            </div>
+          </div>
+        </Link>
+
+        <Link href="/Doctors">
+          <div
+            className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
+              router.pathname == "/Doctors"
+                ? "bg-orange-100 text-orange-500"
+                : "text-gray-400 hover:bg-orange-100 hover:text-orange-500"
+            }`}
+          >
+            <div className="mr-2">
+              <MasksIcon  className="h-6 w-6" />
+            </div>
+            <div>
+              <p>Doctors</p>
             </div>
           </div>
         </Link>

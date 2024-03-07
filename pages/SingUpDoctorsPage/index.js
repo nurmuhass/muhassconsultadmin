@@ -95,9 +95,18 @@ export default function SingUpDoctorsPage({ SingUpDoctors }) {
 
   return (
      <div className="min-h-screen">
-      <div>
+     
+{SingUpDoctors.length <1  ?
+  <div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="text-center">
+    <p class="text-gray-700 text-3xl mb-10 font-bold">They are no New SignUp Doctors</p>
+    <span class="text-6xl font-bold">😟</span>
+  </div>
+</div>
+:
+<>
 
- 
+<div>
   <Link href={`/UsersPage/adduser/`}>
     <button
       className="flex rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90 ml-auto mr-5 mb-5"
@@ -175,6 +184,11 @@ export default function SingUpDoctorsPage({ SingUpDoctors }) {
           </div>
         </div>
       )}
+
+</>
+
+}
+
     </div>
   );
 }

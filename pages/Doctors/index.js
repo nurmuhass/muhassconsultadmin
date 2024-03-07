@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState,useMemo } from 'react';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,17 +6,21 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { fetchUsers, deleteUserById } from '../../lib/fetchData';
+import {  deleteDoctorById } from '../../lib/fetchData';
 import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from 'next/link';
+import { fetchDoctors } from "../../lib/fetchData";
 import Pagination from '@mui/material/Pagination';
 
-export default function Index({ users }) {
+export default function DoctorsPage({ Doctors }) {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5); // Set the number of users per page
+  const itemsPerPage = 2; // Set the number of items per page
+
+
 
   const openDeleteModal = (userId) => {
     setSelectedUserId(userId);
@@ -30,7 +34,7 @@ export default function Index({ users }) {
 
   const handleDelete = async () => {
     try {
-      await deleteUserById(selectedUserId);
+      await deleteDoctorById(selectedUserId);
       closeDeleteModal();
       // Optionally, you can refresh the users list after deletion
       const updatedUsers = await fetchUsers();
@@ -57,10 +61,10 @@ export default function Index({ users }) {
 
   const Actions = ({ id }) => (
     <div className="flex items-center space-between">
-      <Link href={`/UsersPage/${id}/view`}>
+      <Link href={`/Doctors/${id}/view`}>
         <EyeIcon className="h-4 w-4" />
       </Link>
-      <Link href={`/UsersPage/${id}/edit`}>
+      <Link href={`/Doctors/${id}/edit`}>
         <PencilIcon className="h-4 w-4 mx-5" />
       </Link>
       <TrashIcon className="h-4 w-4 cursor-pointer" onClick={() => openDeleteModal(id)} />
@@ -71,83 +75,97 @@ export default function Index({ users }) {
     <TableCell className={`tableCell ${className}`}>{children}</TableCell>
   );
 
-  const filteredUsers = useMemo(() => {
-    return users.filter((user) =>
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDoctors = useMemo(() => {
+    return  Doctors.filter(( Doctor) =>
+    Doctor.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [users, searchTerm]);
+  }, [Doctors, searchTerm]);
+  
 
-  // Get current users
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-  // Change page
   const handleChangePage = (event, newPage) => {
     setCurrentPage(newPage);
   };
 
-  return (
-    <div className="min-h-screen">
-      <div>
-        <Link href={`/UsersPage/adduser/`}>
-          <button
-            className="flex rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90 ml-auto mr-5 mb-5"
-            type="button"
-          >
-            Add New User
-          </button>
-        </Link>
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedDoctors = filteredDoctors.slice(startIndex, endIndex); 
 
-        <div>
-          <input
-            type="text"
-            placeholder="Search by Email"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border p-2 mb-3"
-          />
-        </div>
+
+  return (
+     <div className="min-h-screen">
+     
+{Doctors.length <1  ?
+  <div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="text-center">
+    <p class="text-gray-700 text-3xl mb-10 font-bold">They are no doctors available</p>
+    <span class="text-6xl font-bold">😟</span>
+  </div>
+</div>
+:
+<>
+
+<div>
+  <Link href={`/UsersPage/adduser/`}>
+    <button
+      className="flex rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90 ml-auto mr-5 mb-5"
+      type="button"
+    >
+      Add New User
+    </button>
+  </Link>
+  
+
+<div>
+<input
+    type="text"
+    placeholder="Search by Email"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="border p-2 mb-3"
+  />
+</div>
 
         <TableContainer component={Paper} className="p-15 flex-1 min-w-screen mx-0">
           <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <CustomTableCell>Tracking ID</CustomTableCell>
-                <CustomTableCell>User</CustomTableCell>
-                <CustomTableCell>Email address</CustomTableCell>
-                <CustomTableCell>Gender</CustomTableCell>
-                <CustomTableCell>Phone Number</CustomTableCell>
-                <CustomTableCell>Actions</CustomTableCell>
-              </TableRow>
-            </TableHead>
+          <TableHead>
+        
+  <TableRow>
+    <CustomTableCell>Tracking ID</CustomTableCell>
+    <CustomTableCell>User</CustomTableCell>
+    <CustomTableCell>
+   Email address
+    </CustomTableCell>
+    <CustomTableCell>Gender</CustomTableCell>
+    <CustomTableCell>Phone Number</CustomTableCell>
+    <CustomTableCell>Actions</CustomTableCell>
+  </TableRow>
+</TableHead>
 
             <TableBody>
-              {currentUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <CustomTableCell>{user.id}</CustomTableCell>
+    {paginatedDoctors.map((Doctor) => (
+                <TableRow key={Doctor.id}>
+                  <CustomTableCell>{Doctor.id}</CustomTableCell>
                   <CustomTableCell>
-                    <CellWrapper image={user.image} fullname={user.fullname} />
+                    <CellWrapper image={Doctor.image} fullname={Doctor.fullname} />
                   </CustomTableCell>
-                  <CustomTableCell>{user.email}</CustomTableCell>
-                  <CustomTableCell>{user.gender}</CustomTableCell>
-                  <CustomTableCell>{user.Phone}</CustomTableCell>
+                  <CustomTableCell>{Doctor.email}</CustomTableCell>
+                  <CustomTableCell>{Doctor.gender}</CustomTableCell>
+                  <CustomTableCell>{Doctor.Phone}</CustomTableCell>
                   <CustomTableCell>
-                    <Actions id={user.id} />
+                    <Actions id={Doctor.id} />
                   </CustomTableCell>
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
-        </TableContainer>
-
-        {/* Pagination */}
+            <TableContainer className="mx-0">
         <Pagination
-          className="mt-3 justify-content-center"
-          count={Math.ceil(filteredUsers.length / usersPerPage)}
+          count={Math.ceil(filteredDoctors.length / itemsPerPage)}
           page={currentPage}
           onChange={handleChangePage}
         />
+      </TableContainer>
+          </Table>
+        </TableContainer>
       </div>
       {isDeleteModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
@@ -164,16 +182,21 @@ export default function Index({ users }) {
           </div>
         </div>
       )}
+
+</>
+
+}
+
     </div>
   );
 }
 
 export async function getServerSideProps() {
-  const users = await fetchUsers();
+  const Doctors = await fetchDoctors();
 
   return {
     props: {
-      users,
+      Doctors,
     },
   };
 }
