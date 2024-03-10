@@ -7,13 +7,20 @@ import { signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 export default function Home({ users, SingUpDoctors,Doctors ,Appointments}) {
-
+  const session = useSession({
+    required: true,
+  
+  });
+if(!session)
+ {
+    redirect('/signin');
+  }
 
   return (
     <div className="min-h-screen">
       <p className="text-gray-700 text-3xl mb-16 font-bold">Dashboard</p>
-      {/* <div className='text-white'>{session?.data?.user?.email }</div>
-      <button className='text-white' onClick={() => signOut()}>Logout</button> */}
+      <div className='text-white'>{session?.data?.user?.email }</div>
+      <button className='text-white' onClick={() => signOut()}>Logout</button>
       <div className="grid lg:grid-cols-4 gap-5 mb-16">
         <div className="stats shadow">
           <div className="stat">
