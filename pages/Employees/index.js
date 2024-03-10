@@ -6,38 +6,38 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { fetchUsers, deleteUserById } from '../../lib/fetchData';
+import { fetchEmployees, deleteEmployeeById} from '../../lib/fetchData';
 import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from 'next/link';
 import Pagination from '@mui/material/Pagination';
 
-export default function Index({ users }) {
-  const [selectedUserId, setSelectedUserId] = useState(null);
+export default function Index({ Employees }) {
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5); // Set the number of users per page
+  const [EmployeesPerPage] = useState(5); // Set the number of Employees per page
 
-  const openDeleteModal = (userId) => {
-    setSelectedUserId(userId);
+  const openDeleteModal = (EmployeeId) => {
+    setSelectedEmployeeId(EmployeeId);
     setDeleteModalOpen(true);
   };
 
   const closeDeleteModal = () => {
-    setSelectedUserId(null);
+    setSelectedEmployeeId(null);
     setDeleteModalOpen(false);
   };
 
   const handleDelete = async () => {
     try {
-      await deleteUserById(selectedUserId);
+      await deleteEmployeeById(selectedEmployeeId);
       closeDeleteModal();
-      // Optionally, you can refresh the users list after deletion
-      const updatedUsers = await fetchUsers();
-      fetchUsers();
+      // Optionally, you can refresh the Employees list after deletion
+      const updatedEmployees = await fetchEmployees();
+      fetchEmployees();
       // Update the state or re-fetch the data
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting Employee:', error);
       // Handle error
     }
   };
@@ -57,10 +57,10 @@ export default function Index({ users }) {
 
   const Actions = ({ id }) => (
     <div className="flex items-center space-between">
-      <Link href={`/UsersPage/${id}/view`}>
+      <Link href={`/Employees/${id}/view`}>
         <EyeIcon className="h-4 w-4" />
       </Link>
-      <Link href={`/UsersPage/${id}/edit`}>
+      <Link href={`/Employees/${id}/edit`}>
         <PencilIcon className="h-4 w-4 mx-5" />
       </Link>
       <TrashIcon className="h-4 w-4 cursor-pointer" onClick={() => openDeleteModal(id)} />
@@ -71,16 +71,16 @@ export default function Index({ users }) {
     <TableCell className={`tableCell ${className}`}>{children}</TableCell>
   );
 
-  const filteredUsers = useMemo(() => {
-    return users.filter((user) =>
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployees = useMemo(() => {
+    return Employees.filter((Employee) =>
+    Employee.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [users, searchTerm]);
+  }, [Employees, searchTerm]);
 
-  // Get current users
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  // Get current Employees
+  const indexOfLastEmployee = currentPage * EmployeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - EmployeesPerPage;
+  const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
   // Change page
   const handleChangePage = (event, newPage) => {
@@ -90,12 +90,12 @@ export default function Index({ users }) {
   return (
     <div className="min-h-screen">
       <div>
-        <Link href={`/UsersPage/adduser/`}>
+        <Link href={`/Employees/addEmployee/`}>
           <button
             className="flex rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90 ml-auto mr-5 mb-5"
             type="button"
           >
-            Add New User
+            Add New Employee
           </button>
         </Link>
 
@@ -114,7 +114,7 @@ export default function Index({ users }) {
             <TableHead>
               <TableRow>
                 <CustomTableCell>Tracking ID</CustomTableCell>
-                <CustomTableCell>User</CustomTableCell>
+                <CustomTableCell>Employee</CustomTableCell>
                 <CustomTableCell>Email address</CustomTableCell>
                 <CustomTableCell>Gender</CustomTableCell>
                 <CustomTableCell>Phone Number</CustomTableCell>
@@ -123,17 +123,17 @@ export default function Index({ users }) {
             </TableHead>
 
             <TableBody>
-              {currentUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <CustomTableCell>{user.id}</CustomTableCell>
+              {currentEmployees.map((Employee) => (
+                <TableRow key={Employee.id}>
+                  <CustomTableCell>{Employee.id}</CustomTableCell>
                   <CustomTableCell>
-                    <CellWrapper image={user.image} fullname={user.fullname} />
+                    <CellWrapper image={Employee.image} fullname={Employee.fullname} />
                   </CustomTableCell>
-                  <CustomTableCell>{user.email}</CustomTableCell>
-                  <CustomTableCell>{user.gender}</CustomTableCell>
-                  <CustomTableCell>{user.Phone}</CustomTableCell>
+                  <CustomTableCell>{Employee.email}</CustomTableCell>
+                  <CustomTableCell>{Employee.gender}</CustomTableCell>
+                  <CustomTableCell>{Employee.Phone}</CustomTableCell>
                   <CustomTableCell>
-                    <Actions id={user.id} />
+                    <Actions id={Employee.id} />
                   </CustomTableCell>
                 </TableRow>
               ))}
@@ -144,7 +144,7 @@ export default function Index({ users }) {
         {/* Pagination */}
         <Pagination
           className="mt-3 justify-content-center"
-          count={Math.ceil(filteredUsers.length / usersPerPage)}
+          count={Math.ceil(filteredEmployees.length / EmployeesPerPage)}
           page={currentPage}
           onChange={handleChangePage}
         />
@@ -152,7 +152,7 @@ export default function Index({ users }) {
       {isDeleteModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-md">
-            <p>Are you sure you want to delete this user?</p>
+            <p>Are you sure you want to delete this Employee?</p>
             <div className="flex justify-end mt-4">
               <button className="bg-red-500 text-white px-4 py-2 rounded-md mr-2" onClick={handleDelete}>
                 Yes
@@ -169,11 +169,11 @@ export default function Index({ users }) {
 }
 
 export async function getServerSideProps() {
-  const users = await fetchUsers();
+  const Employees = await fetchEmployees();
 
   return {
     props: {
-      users,
+      Employees,
     },
   };
 }

@@ -1,17 +1,23 @@
+'use client';
 import Users from "../components/Users";
 import Chart from "../components/chart/Chart";
-import { fetchUsers,fetchSingUpDoctors } from "../lib/fetchData";
+import { fetchUsers,fetchSingUpDoctors,fetchDoctors, fetchAppoinments } from "../lib/fetchData";
 import Table from "../components/table/Table";
+import { signOut, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-export default function Home({ users, SingUpDoctors }) {
+export default function Home({ users, SingUpDoctors,Doctors ,Appointments}) {
+
+
   return (
     <div className="min-h-screen">
       <p className="text-gray-700 text-3xl mb-16 font-bold">Dashboard</p>
-
-      <div className="grid lg:grid-cols-3 gap-5 mb-16">
+      {/* <div className='text-white'>{session?.data?.user?.email }</div>
+      <button className='text-white' onClick={() => signOut()}>Logout</button> */}
+      <div className="grid lg:grid-cols-4 gap-5 mb-16">
         <div className="stats shadow">
           <div className="stat">
-            <div className="stat-title">Total Products </div>
+            <div className="stat-title">Total Users </div>
             <div className="stat-value">{users.length}</div>
             <div className="stat-desc">21% more than last month</div>
           </div>
@@ -19,7 +25,15 @@ export default function Home({ users, SingUpDoctors }) {
 
         <div className="stats shadow">
           <div className="stat">
-            <div className="stat-title">Total Active Orders </div>
+            <div className="stat-title">Total Doctors </div>
+            <div className="stat-value">{Doctors.length}</div>
+            <div className="stat-desc">21% more than last month</div>
+          </div>
+        </div>
+
+        <div className="stats shadow">
+          <div className="stat">
+            <div className="stat-title">Total SignedUpDoctors </div>
             <div className="stat-value">{SingUpDoctors.length}</div>
             <div className="stat-desc">21% more than last month</div>
           </div>
@@ -27,11 +41,12 @@ export default function Home({ users, SingUpDoctors }) {
 
         <div className="stats shadow">
           <div className="stat">
-            <div className="stat-title">Total Active Orders </div>
-            <div className="stat-value">{SingUpDoctors.length}</div>
+            <div className="stat-title">Total Num of Appointment </div>
+            <div className="stat-value">{Appointments.length}</div>
             <div className="stat-desc">21% more than last month</div>
           </div>
         </div>
+
       </div>
 
  <div>
@@ -49,11 +64,15 @@ export default function Home({ users, SingUpDoctors }) {
 export async function getServerSideProps() {
   const users = await fetchUsers();
   const SingUpDoctors = await fetchSingUpDoctors();
+  const Doctors =await fetchDoctors();
+  const Appointments = await fetchAppoinments();
 
   return {
     props: {
       users,
       SingUpDoctors,
+      Doctors,
+      Appointments,
     },
   };
 }

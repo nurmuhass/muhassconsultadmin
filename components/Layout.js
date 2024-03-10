@@ -1,7 +1,12 @@
+'use client';
 import { useState, useEffect, Fragment } from "react";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 import { Transition } from "@headlessui/react";
+import Login from "../Login";
+import SessionProvider from "../pages/SessionProvider";
+import { signOut, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Layout({ children }) {
   const [showNav, setShowNav] = useState(true);
@@ -27,8 +32,14 @@ export default function Layout({ children }) {
     };
   }, []);
 
+
+// if(!useSession({required: true,}))
+//  {redirect('/signin')}
+
+  
   return (
     <>
+    <SessionProvider>
       <TopBar showNav={showNav} setShowNav={setShowNav} />
       <Transition
         as={Fragment}
@@ -43,12 +54,14 @@ export default function Layout({ children }) {
         <SideBar showNav={showNav} />
       </Transition>
       <main
+
         className={`pt-16 transition-all duration-[400ms] ${
           showNav && !isMobile ? "pl-56" : ""
         }`}
       >
-        <div className="px-4 md:px-16">{children}</div>
+        <div className="px-4 md:px-6">{children}</div>
       </main>
+      </SessionProvider>
     </>
   );
 }
